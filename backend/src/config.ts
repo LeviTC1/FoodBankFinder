@@ -3,8 +3,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const toNumber = (value: string | undefined, fallback: number): number => {
+  if (value == null || value.trim() === "") {
+    return fallback;
+  }
   const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 };
 
 const parseCorsOrigin = (value: string | undefined): string | string[] => {

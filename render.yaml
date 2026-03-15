@@ -11,13 +11,9 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        sync: false
       - key: DATABASE_URL
         sync: false
       - key: CORS_ORIGIN
-        sync: false
-      - key: OPENAI_API_KEY
         sync: false
       - key: OPENAI_MODEL
         value: gpt-4.1-mini
