@@ -11,8 +11,9 @@ const toNumber = (value: string | undefined): number | undefined => {
 };
 
 const main = async () => {
+  const batchSize = toNumber(process.env.ENRICHMENT_BATCH_SIZE) ?? 100;
   const result = await processFoodBankEnrichment({
-    batchSize: toNumber(process.env.ENRICHMENT_BATCH_SIZE),
+    batchSize,
     rateLimitMs: toNumber(process.env.ENRICHMENT_RATE_LIMIT_MS),
     minConfidence: toNumber(process.env.ENRICHMENT_MIN_CONFIDENCE)
   });

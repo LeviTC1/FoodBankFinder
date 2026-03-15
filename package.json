@@ -19,7 +19,7 @@
     "enrich:foodbanks": "tsx scripts/enrich_foodbank_data.ts",
     "coverage:build": "tsx scripts/build_coverage_index.ts",
     "normalize": "tsx scripts/normalize_data.ts",
-    "pipeline:prod": "npm run ingest:osm && npm run normalize && npm run coverage:build",
+    "pipeline:prod": "npm run ingest:osm && npm run ingest:foodbanks && npm run normalize && npm run coverage:build && npm run enrich:foodbanks",
     "normalize:referrals": "tsx scripts/normalize_referrals.ts",
     "jobs": "tsx backend/src/jobs/index.ts"
   },

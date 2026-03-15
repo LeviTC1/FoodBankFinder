@@ -3,7 +3,8 @@ import axios from "axios";
 import { z } from "zod";
 import type { FoodBank } from "@foodbankfinder/shared";
 import { config } from "../config.js";
-import { withClient, pool } from "../database/pool.js";
+import { pool } from "../database/pool.js";
+import { FoodBankRepository } from "../database/foodBankRepository.js";
 import { NormalizationService, type NormalizedFoodBank } from "../services/normalizationService.js";
 import { logger } from "../utils/logger.js";
 import {
@@ -77,6 +78,7 @@ interface GiveFoodIngestionResult {
   expanded_locations: number;
   normalized_records: number;
   inserted_records: number;
+  updated_records: number;
   finished_at: string;
   duration_ms: number;
 }
@@ -258,112 +260,12 @@ const runConcurrently = async <T, R>(
   return output;
 };
 
-const insertBatch = async (records: NormalizedFoodBank[]): Promise<number> => {
-  if (!records.length) return 0;
-
-  return withClient(async (client) => {
-    await client.query("BEGIN");
-
-    try {
-      await client.query("TRUNCATE TABLE enrichment_queue, foodbanks RESTART IDENTITY CASCADE");
-
-      const chunkSize = 250;
-      let inserted = 0;
-
-      for (let chunkStart = 0; chunkStart < records.length; chunkStart += chunkSize) {
-        const chunk = records.slice(chunkStart, chunkStart + chunkSize);
-        const params: Array<string | number | boolean | null> = [];
-        const rows: string[] = [];
-
-        chunk.forEach((record, rowIndex) => {
-          const offset = rowIndex * 15;
-          const p = (position: number) => `$${offset + position}`;
-
-          rows.push(`(
-            ${p(1)},
-            ${p(2)},
-            ${p(3)},
-            ${p(4)},
-            ${p(5)},
-            ${p(6)},
-            CASE WHEN ${p(5)}::double precision IS NOT NULL AND ${p(6)}::double precision IS NOT NULL
-              THEN ST_SetSRID(ST_MakePoint(${p(6)}, ${p(5)}), 4326)::geography
-              ELSE NULL
-            END,
-            ${p(7)},
-            ${p(8)},
-            ${p(9)},
-            ${p(10)},
-            ${p(11)}::jsonb,
-            ${p(12)},
-            ${p(13)},
-            ${p(14)},
-            ${p(15)},
-            NOW(),
-            NOW()
-          )`);
-
-          params.push(
-            record.name,
-            record.organisation ?? null,
-            record.address ?? null,
-            record.postcode ?? null,
-            record.latitude ?? null,
-            record.longitude ?? null,
-            record.phone ?? null,
-            record.email ?? null,
-            record.website ?? null,
-            record.opening_hours ?? null,
-            record.opening_hours_parsed ? JSON.stringify(record.opening_hours_parsed) : null,
-            record.referral_required ?? null,
-            record.notes ?? null,
-            record.source,
-            record.referral_type ?? "unknown"
-          );
-        });
-
-        const sql = `
-          INSERT INTO foodbanks (
-            name,
-            organisation,
-            address,
-            postcode,
-            latitude,
-            longitude,
-            geom,
-            phone,
-            email,
-            website,
-            opening_hours,
-            opening_hours_parsed,
-            referral_required,
-            notes,
-            source,
-            referral_type,
-            created_at,
-            updated_at
-          )
-          VALUES ${rows.join(",")}
-        `;
-
-        await client.query(sql, params);
-        inserted += chunk.length;
-      }
-
-      await client.query("COMMIT");
-      return inserted;
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    }
-  });
-};
-
 export const runGiveFoodIngestion = async (): Promise<GiveFoodIngestionResult> => {
   const startedAt = Date.now();
   logger.info({ url: config.giveFoodApiUrl }, "Starting GiveFood national ingestion");
 
   const normalizer = new NormalizationService();
+  const repository = new FoodBankRepository();
 
   const listResponse = await axios.get(config.giveFoodApiUrl, { timeout: 60_000 });
   const listData = z.array(giveFoodSummarySchema).parse(listResponse.data);
@@ -427,14 +329,15 @@ export const runGiveFoodIngestion = async (): Promise<GiveFoodIngestionResult> =
     .filter((record): record is NonNullable<typeof record> => Boolean(record));
 
   const deduped = dedupeByNameAndPostcode(normalized);
-  const insertedRecords = await insertBatch(deduped);
+  const writeResult = await repository.upsertBatch(deduped);
 
   const result: GiveFoodIngestionResult = {
     source: "givefood",
     fetched_foodbanks: openFoodbanks.length,
     expanded_locations: expandedLocations,
     normalized_records: deduped.length,
-    inserted_records: insertedRecords,
+    inserted_records: writeResult.inserted,
+    updated_records: writeResult.updated,
     finished_at: new Date().toISOString(),
     duration_ms: Date.now() - startedAt
   };

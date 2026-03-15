@@ -37,7 +37,6 @@ export interface EnrichmentRunOptions {
   rateLimitMs?: number;
   minConfidence?: number;
   maxAttempts?: number;
-  staleAfterDays?: number;
 }
 
 export interface EnrichmentRunResult {
@@ -53,7 +52,6 @@ export interface EnrichmentRunResult {
 }
 
 const DEFAULT_MAX_ATTEMPTS = 4;
-const DEFAULT_STALE_AFTER_DAYS = 30;
 
 const pause = async (ms: number) => {
   if (ms <= 0) return;
@@ -161,8 +159,7 @@ const hasArrayContent = (value?: string[] | null): boolean => Boolean(value && v
 
 const seedQueue = async (
   client: PoolClient,
-  maxAttempts: number,
-  staleAfterDays: number
+  maxAttempts: number
 ): Promise<QueueSeedResult> => {
   const insertRes = await client.query(
     `
@@ -182,11 +179,12 @@ const seedQueue = async (
       FROM foodbanks f
       WHERE f.website IS NOT NULL
         AND NULLIF(TRIM(f.website), '') IS NOT NULL
+        AND (f.ai_summary IS NULL OR NULLIF(TRIM(f.ai_summary), '') IS NULL)
       ON CONFLICT (foodbank_id) DO NOTHING
     `
   );
 
-  const requeueStaleRes = await client.query(
+  const requeueFailedRes = await client.query(
     `
       UPDATE enrichment_queue q
       SET
@@ -195,25 +193,10 @@ const seedQueue = async (
         error_message = NULL
       FROM foodbanks f
       WHERE q.foodbank_id = f.id
-        AND q.status = 'completed'
-        AND (
-          f.ai_last_updated IS NULL
-          OR f.ai_last_updated < NOW() - make_interval(days => $1::int)
-        )
-    `,
-    [staleAfterDays]
-  );
-
-  const requeueFailedRes = await client.query(
-    `
-      UPDATE enrichment_queue
-      SET
-        status = 'pending',
-        updated_at = NOW(),
-        error_message = NULL
-      WHERE status = 'failed'
-        AND attempts < $1
-        AND (last_attempt IS NULL OR last_attempt < NOW() - interval '12 hours')
+        AND q.status = 'failed'
+        AND q.attempts < $1
+        AND (q.last_attempt IS NULL OR q.last_attempt < NOW() - interval '12 hours')
+        AND (f.ai_summary IS NULL OR NULLIF(TRIM(f.ai_summary), '') IS NULL)
     `,
     [maxAttempts]
   );
@@ -231,22 +214,18 @@ const seedQueue = async (
 
   return {
     inserted: insertRes.rowCount ?? 0,
-    requeued:
-      (requeueStaleRes.rowCount ?? 0) +
-      (requeueFailedRes.rowCount ?? 0) +
-      (recoverStalledRes.rowCount ?? 0)
+    requeued: (requeueFailedRes.rowCount ?? 0) + (recoverStalledRes.rowCount ?? 0)
   };
 };
 
 const claimQueueBatch = async (options: {
   batchSize: number;
   maxAttempts: number;
-  staleAfterDays: number;
 }): Promise<{ rows: QueueFoodBankRow[]; seed: QueueSeedResult }> =>
   withClient(async (client) => {
     await client.query("BEGIN");
     try {
-      const seed = await seedQueue(client, options.maxAttempts, options.staleAfterDays);
+      const seed = await seedQueue(client, options.maxAttempts);
 
       const candidateRes = await client.query<QueueFoodBankRow>(
         `
@@ -280,6 +259,7 @@ const claimQueueBatch = async (options: {
             AND q.attempts < $1
             AND f.website IS NOT NULL
             AND NULLIF(TRIM(f.website), '') IS NOT NULL
+            AND (f.ai_summary IS NULL OR NULLIF(TRIM(f.ai_summary), '') IS NULL)
           ORDER BY
             CASE WHEN q.status = 'pending' THEN 0 ELSE 1 END,
             q.last_attempt NULLS FIRST
@@ -551,14 +531,12 @@ export const processFoodBankEnrichment = async (
     Math.min(1, options.minConfidence ?? config.enrichmentMinConfidence)
   );
   const maxAttempts = Math.max(1, options.maxAttempts ?? DEFAULT_MAX_ATTEMPTS);
-  const staleAfterDays = Math.max(1, options.staleAfterDays ?? DEFAULT_STALE_AFTER_DAYS);
 
   const openAi = new OpenAIService();
 
   const { rows, seed } = await claimQueueBatch({
     batchSize,
-    maxAttempts,
-    staleAfterDays
+    maxAttempts
   });
 
   let processed = 0;

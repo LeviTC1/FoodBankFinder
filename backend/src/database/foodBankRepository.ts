@@ -702,7 +702,8 @@ export class FoodBankRepository {
                   opening_hours_parsed = COALESCE($10::jsonb, opening_hours_parsed),
                   referral_required = COALESCE($11, referral_required),
                   referral_type = CASE
-                    WHEN COALESCE($12, 'unknown') <> 'unknown' THEN $12
+                    WHEN COALESCE(referral_type, 'unknown') = 'unknown'
+                      AND COALESCE($12, 'unknown') <> 'unknown' THEN $12
                     ELSE referral_type
                   END,
                   notes = COALESCE($13, notes),
