@@ -1,5 +1,5 @@
-import { IngestionService } from "../backend/src/ingestion/ingestionService";
-import { OpenStreetMapProvider } from "../backend/src/ingestion/providers/openStreetMapProvider";
+import { IngestionService } from "../backend/src/ingestion/ingestionService.js";
+import { OpenStreetMapProvider } from "../backend/src/ingestion/providers/openStreetMapProvider.js";
 
 const main = async () => {
   const service = new IngestionService();

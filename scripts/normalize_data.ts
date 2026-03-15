@@ -1,7 +1,7 @@
 import type { FoodBank, SourceName } from "@foodbankfinder/shared";
-import { pool } from "../backend/src/database/pool";
-import { FoodBankRepository } from "../backend/src/database/foodBankRepository";
-import { NormalizationService } from "../backend/src/services/normalizationService";
+import { pool } from "../backend/src/database/pool.js";
+import { FoodBankRepository } from "../backend/src/database/foodBankRepository.js";
+import { NormalizationService } from "../backend/src/services/normalizationService.js";
 
 const normalizer = new NormalizationService();
 const repository = new FoodBankRepository();

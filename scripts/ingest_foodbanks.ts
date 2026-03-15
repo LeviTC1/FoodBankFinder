@@ -1,5 +1,5 @@
-import { pool } from "../backend/src/database/pool";
-import { runGiveFoodIngestion } from "../backend/src/ingestion/givefood_ingest";
+import { pool } from "../backend/src/database/pool.js";
+import { runGiveFoodIngestion } from "../backend/src/ingestion/givefood_ingest.js";
 
 runGiveFoodIngestion()
   .then((result) => {

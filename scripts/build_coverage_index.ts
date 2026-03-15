@@ -1,4 +1,4 @@
-import { pool, withClient } from "../backend/src/database/pool";
+import { pool, withClient } from "../backend/src/database/pool.js";
 
 interface CoveragePoint {
   lat: number;
