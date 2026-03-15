@@ -4,7 +4,7 @@ services:
     plan: free
     runtime: node
     rootDir: .
-    buildCommand: npm ci && npm run build -w shared && npm run build -w backend
+    buildCommand: npm ci --include=dev && npm run build -w shared && npm run build -w backend
     startCommand: npm run start -w backend
     healthCheckPath: /health
     autoDeploy: true
