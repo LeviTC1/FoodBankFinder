@@ -265,7 +265,7 @@ const insertBatch = async (records: NormalizedFoodBank[]): Promise<number> => {
     await client.query("BEGIN");
 
     try {
-      await client.query("TRUNCATE TABLE foodbanks RESTART IDENTITY");
+      await client.query("TRUNCATE TABLE enrichment_queue, foodbanks RESTART IDENTITY CASCADE");
 
       const chunkSize = 250;
       let inserted = 0;
