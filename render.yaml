@@ -1,6 +1,7 @@
 services:
   - type: web
     name: foodbankfinder-backend
+    plan: free
     runtime: node
     rootDir: .
     buildCommand: npm ci && npm run build -w shared && npm run build -w backend
