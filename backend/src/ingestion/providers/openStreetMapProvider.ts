@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { FoodBank } from "@foodbankfinder/shared";
-import { config } from "../../config";
-import type { IngestionProvider } from "./baseProvider";
+import { config } from "../../config.js";
+import type { IngestionProvider } from "./baseProvider.js";
 
 interface OverpassElement {
   id: number;

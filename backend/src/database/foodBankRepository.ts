@@ -7,9 +7,9 @@ import type {
   ReferralType,
   WeekdayKey
 } from "@foodbankfinder/shared";
-import { pool, withClient } from "./pool";
-import type { NormalizedFoodBank } from "../services/normalizationService";
-import { isOpenNow } from "../utils/isOpenNow";
+import { pool, withClient } from "./pool.js";
+import type { NormalizedFoodBank } from "../services/normalizationService.js";
+import { isOpenNow } from "../utils/isOpenNow.js";
 
 interface QueryResultMeta {
   total: number;

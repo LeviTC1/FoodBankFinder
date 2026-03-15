@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { FoodBank } from "@foodbankfinder/shared";
-import type { IngestionProvider } from "./baseProvider";
+import type { IngestionProvider } from "./baseProvider.js";
 
 export interface LocalCouncilSourceConfig {
   name: string;

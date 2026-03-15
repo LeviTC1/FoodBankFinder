@@ -1,15 +1,15 @@
 import type { ReferralType } from "@foodbankfinder/shared";
 import type { PoolClient } from "pg";
-import { pool, withClient } from "../database/pool";
-import { config } from "../config";
-import { parseOpeningHours } from "../utils/parseOpeningHours";
-import { fetchWebsiteContent } from "../utils/fetchWebsiteContent";
-import { OpenAIService } from "./openaiService";
-import { logger } from "../utils/logger";
+import { pool, withClient } from "../database/pool.js";
+import { config } from "../config.js";
+import { parseOpeningHours } from "../utils/parseOpeningHours.js";
+import { fetchWebsiteContent } from "../utils/fetchWebsiteContent.js";
+import { OpenAIService } from "./openaiService.js";
+import { logger } from "../utils/logger.js";
 import {
   inferReferralType,
   referralTypeToRequired
-} from "../utils/referralType";
+} from "../utils/referralType.js";
 
 interface QueueFoodBankRow {
   foodbank_id: number;

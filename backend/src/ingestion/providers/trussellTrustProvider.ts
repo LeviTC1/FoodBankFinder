@@ -1,9 +1,9 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import type { FoodBank } from "@foodbankfinder/shared";
-import { config } from "../../config";
-import { logger } from "../../utils/logger";
-import type { IngestionProvider } from "./baseProvider";
+import { config } from "../../config.js";
+import { logger } from "../../utils/logger.js";
+import type { IngestionProvider } from "./baseProvider.js";
 
 const parseCsv = (csvText: string): Array<Record<string, string>> => {
   const lines = csvText.split(/\r?\n/).filter(Boolean);

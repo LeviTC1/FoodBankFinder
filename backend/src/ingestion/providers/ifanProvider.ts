@@ -1,9 +1,9 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import type { FoodBank } from "@foodbankfinder/shared";
-import { config } from "../../config";
-import { logger } from "../../utils/logger";
-import type { IngestionProvider } from "./baseProvider";
+import { config } from "../../config.js";
+import { logger } from "../../utils/logger.js";
+import type { IngestionProvider } from "./baseProvider.js";
 
 const mapJsonToFoodBank = (record: Record<string, unknown>): Partial<FoodBank> => ({
   name: (record.name as string) || (record.organisation as string) || "IFAN Member",

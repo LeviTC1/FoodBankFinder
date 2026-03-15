@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { Request, Response } from "express";
-import { FoodBankService } from "../services/foodBankService";
+import { FoodBankService } from "../services/foodBankService.js";
 
 const listQuerySchema = z.object({
   lat: z.coerce.number().optional(),

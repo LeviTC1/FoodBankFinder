@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { FoodBankController } from "../controllers/foodBankController";
+import { FoodBankController } from "../controllers/foodBankController.js";
 
 const controller = new FoodBankController();
 

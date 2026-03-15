@@ -1,8 +1,8 @@
 import type { IngestionResult, SourceName } from "@foodbankfinder/shared";
-import type { IngestionProvider } from "./providers/baseProvider";
-import { FoodBankRepository } from "../database/foodBankRepository";
-import { NormalizationService } from "../services/normalizationService";
-import { logger } from "../utils/logger";
+import type { IngestionProvider } from "./providers/baseProvider.js";
+import { FoodBankRepository } from "../database/foodBankRepository.js";
+import { NormalizationService } from "../services/normalizationService.js";
+import { logger } from "../utils/logger.js";
 
 export class IngestionService {
   private readonly normalizer = new NormalizationService();

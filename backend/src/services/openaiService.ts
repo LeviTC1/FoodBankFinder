@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { z } from "zod";
-import { config } from "../config";
+import { config } from "../config.js";
 
 const extractionSchema = z.object({
   phone: z.string().nullable().optional(),

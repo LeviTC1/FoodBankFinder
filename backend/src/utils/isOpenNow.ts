@@ -1,5 +1,5 @@
 import type { FoodBank, OpeningHoursParsed, WeekdayKey } from "@foodbankfinder/shared";
-import { parseOpeningHours } from "./parseOpeningHours";
+import { parseOpeningHours } from "./parseOpeningHours.js";
 
 const weekdayOrder: WeekdayKey[] = [
   "sunday",

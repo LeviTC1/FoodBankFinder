@@ -2,8 +2,8 @@ import type { FoodBankQuery, FoodBankSearchQuery } from "@foodbankfinder/shared"
 import {
   FoodBankRepository,
   type NearbyQueryOptions
-} from "../database/foodBankRepository";
-import { referralAccessibilityRank } from "../utils/referralType";
+} from "../database/foodBankRepository.js";
+import { referralAccessibilityRank } from "../utils/referralType.js";
 
 export class FoodBankService {
   private readonly repository = new FoodBankRepository();

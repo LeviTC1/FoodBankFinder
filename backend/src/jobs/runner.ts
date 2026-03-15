@@ -1,12 +1,12 @@
 import axios from "axios";
-import { config } from "../config";
-import { IngestionService } from "../ingestion/ingestionService";
-import { runGiveFoodIngestion } from "../ingestion/givefood_ingest";
-import { TrussellTrustProvider } from "../ingestion/providers/trussellTrustProvider";
-import { IFANProvider } from "../ingestion/providers/ifanProvider";
-import { OpenStreetMapProvider } from "../ingestion/providers/openStreetMapProvider";
-import { processFoodBankEnrichment } from "../services/enrichmentService";
-import { logger } from "../utils/logger";
+import { config } from "../config.js";
+import { IngestionService } from "../ingestion/ingestionService.js";
+import { runGiveFoodIngestion } from "../ingestion/givefood_ingest.js";
+import { TrussellTrustProvider } from "../ingestion/providers/trussellTrustProvider.js";
+import { IFANProvider } from "../ingestion/providers/ifanProvider.js";
+import { OpenStreetMapProvider } from "../ingestion/providers/openStreetMapProvider.js";
+import { processFoodBankEnrichment } from "../services/enrichmentService.js";
+import { logger } from "../utils/logger.js";
 
 const ingestion = new IngestionService();
 

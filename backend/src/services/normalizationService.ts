@@ -1,10 +1,10 @@
 import Fuse from "fuse.js";
 import type { FoodBank, SourceName } from "@foodbankfinder/shared";
-import { parseOpeningHours } from "../utils/parseOpeningHours";
+import { parseOpeningHours } from "../utils/parseOpeningHours.js";
 import {
   inferReferralType,
   referralTypeToRequired
-} from "../utils/referralType";
+} from "../utils/referralType.js";
 
 export interface NormalizedFoodBank extends FoodBank {
   normalized_hash: string;

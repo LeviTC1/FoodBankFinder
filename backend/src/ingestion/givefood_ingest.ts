@@ -2,14 +2,14 @@ import { fileURLToPath } from "node:url";
 import axios from "axios";
 import { z } from "zod";
 import type { FoodBank } from "@foodbankfinder/shared";
-import { config } from "../config";
-import { withClient, pool } from "../database/pool";
-import { NormalizationService, type NormalizedFoodBank } from "../services/normalizationService";
-import { logger } from "../utils/logger";
+import { config } from "../config.js";
+import { withClient, pool } from "../database/pool.js";
+import { NormalizationService, type NormalizedFoodBank } from "../services/normalizationService.js";
+import { logger } from "../utils/logger.js";
 import {
   inferReferralType,
   referralTypeToRequired
-} from "../utils/referralType";
+} from "../utils/referralType.js";
 
 const giveFoodUrlsSchema = z
   .object({

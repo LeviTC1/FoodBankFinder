@@ -4,8 +4,8 @@ import {
   runWeeklyRebuildDataset,
   runSourceHealthCheck,
   runDailyEnrichment
-} from "./runner";
-import { logger } from "../utils/logger";
+} from "./runner.js";
+import { logger } from "../utils/logger.js";
 
 runDailyUpdateFoodbanks().catch((err) => logger.error({ err }, "Daily update failed"));
 

@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
-import { foodBankRouter } from "./routes/foodbanks";
-import { config } from "./config";
-import { logger } from "./utils/logger";
-import { pool } from "./database/pool";
+import { foodBankRouter } from "./routes/foodbanks.js";
+import { config } from "./config.js";
+import { logger } from "./utils/logger.js";
+import { pool } from "./database/pool.js";
 
 const app = express();
 
