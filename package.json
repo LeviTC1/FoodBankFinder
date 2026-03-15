@@ -1,0 +1,30 @@
+{
+  "name": "foodbankfinder",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "npm run build -w shared && concurrently -n SHARED,BACKEND,FRONTEND -c yellow,cyan,magenta \"npm run dev -w shared\" \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -w shared && npm run build -w backend && npm run build -w frontend",
+    "lint": "npm run lint -w backend && npm run lint -w frontend",
+    "check": "npm run build -w shared && npm run check -w shared && npm run check -w backend && npm run check -w frontend",
+    "ingest:trussell": "tsx scripts/ingest_trussell_trust.ts",
+    "ingest:ifan": "tsx scripts/ingest_ifan.ts",
+    "ingest:osm": "tsx scripts/ingest_openstreetmap.ts",
+    "ingest:foodbanks": "tsx scripts/ingest_foodbanks.ts",
+    "enrich:foodbanks": "tsx scripts/enrich_foodbank_data.ts",
+    "coverage:build": "tsx scripts/build_coverage_index.ts",
+    "normalize": "tsx scripts/normalize_data.ts",
+    "normalize:referrals": "tsx scripts/normalize_referrals.ts",
+    "jobs": "tsx backend/src/jobs/index.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  color: #2b2b2b;
+  background: #f6f8f6;
+}
+
+.app-shell {
+  background:
+    radial-gradient(1000px 500px at 0% 0%, rgba(232, 245, 237, 0.8), transparent 60%),
+    radial-gradient(800px 420px at 100% 100%, rgba(219, 239, 228, 0.75), transparent 65%),
+    #f6f8f6;
+}
+
+.map-frame .leaflet-control-zoom a {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(15, 23, 42, 0.82);
+  color: #e2e8f0;
+}
+
+.map-frame .leaflet-control-attribution {
+  background: rgba(2, 6, 23, 0.74);
+  color: rgba(226, 232, 240, 0.7);
+}
+
+.map-frame .foodbank-marker-icon {
+  width: 32px !important;
+  height: 40px !important;
+  opacity: 1 !important;
+  transform-origin: 50% 100%;
+}
+
+.map-frame .foodbank-marker-icon--none {
+  filter:
+    drop-shadow(0 0 7px rgba(74, 222, 128, 0.95))
+    drop-shadow(0 0 20px rgba(34, 197, 94, 0.55));
+}
+
+.map-frame .foodbank-marker-icon--soft {
+  filter:
+    drop-shadow(0 0 7px rgba(251, 191, 36, 0.95))
+    drop-shadow(0 0 20px rgba(217, 119, 6, 0.5));
+}
+
+.map-frame .foodbank-marker-icon--required {
+  filter:
+    drop-shadow(0 0 7px rgba(251, 113, 133, 0.95))
+    drop-shadow(0 0 20px rgba(225, 29, 72, 0.5));
+}
+
+.map-frame .foodbank-marker-icon--unknown {
+  filter:
+    drop-shadow(0 0 5px rgba(203, 213, 225, 0.6))
+    drop-shadow(0 0 14px rgba(148, 163, 184, 0.35));
+}
+
+.map-frame .foodbank-marker-icon--dim {
+  opacity: 0.6 !important;
+  filter: grayscale(0.4) brightness(0.8);
+}
+
+.map-frame .marker-cluster-small,
+.map-frame .marker-cluster-medium,
+.map-frame .marker-cluster-large {
+  background: rgba(8, 47, 73, 0.72);
+  border: 1px solid rgba(103, 232, 249, 0.68);
+  box-shadow:
+    0 0 16px rgba(45, 212, 191, 0.5),
+    inset 0 0 12px rgba(34, 211, 238, 0.22);
+}
+
+.map-frame .marker-cluster div {
+  background: rgba(8, 145, 178, 0.9);
+  color: #ecfeff;
+  font-weight: 700;
+}
+
+.map-frame .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  border: 1px solid #e4e7e4;
+  box-shadow: 0 8px 20px rgba(17, 40, 20, 0.12);
+}
+
+.map-frame .leaflet-popup-tip {
+  background: #ffffff;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 2px solid #4f9b7a;
+  outline-offset: 2px;
+}

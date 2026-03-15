@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: foodbankfinder-backend
+    runtime: node
+    rootDir: .
+    buildCommand: npm ci && npm run build -w shared && npm run build -w backend
+    startCommand: npm run start -w backend
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4.1-mini
+      - key: GIVEFOOD_API_URL
+        value: https://www.givefood.org.uk/api/2/foodbanks/
+      - key: OVERPASS_URL
+        value: https://overpass-api.de/api/interpreter
+      - key: ENRICHMENT_BATCH_SIZE
+        value: "50"
+      - key: ENRICHMENT_RATE_LIMIT_MS
+        value: "1000"
+      - key: ENRICHMENT_MIN_CONFIDENCE
+        value: "0.6"
